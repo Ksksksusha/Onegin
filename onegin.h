@@ -54,6 +54,8 @@ void copy_in_buf(FILE *stream, char* buf, size_t buf_size);                     
 
 size_t change_symbol(char* str, size_t str_len, char symbol_old, char symbol_new);          //меняем \n на \0 и считаем  количество строк
 
+size_t change_symbol_calc_str(char* str, size_t str_len, char symbol_old, char symbol_new, size_t normal_lenght);
+
 char** create_text5(FILE *stream);                                                          //создаем массив text5 + заполняем text5 указателями на строки
 
 size_t text5_size(char** data);                               
@@ -65,14 +67,13 @@ void clear_data(char** data);                                                   
 
 //sort functions
 
-void bubble_sort(char** data, int size);
+int is_letter(char c);
 
-void swap_str(char* str1, char* str2);
+void swap_str(char** data, size_t iter_str1, size_t iter_str2);
 
-void qsort_hoar(char* data, int left, int right);
+int str_cmp(const char* str1, const char* str2);
 
-int partition(char* data, int left, int right);//return mid
-
+char** bubble_sort(char** data, size_t size);
 
 
 

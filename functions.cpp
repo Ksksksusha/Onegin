@@ -268,7 +268,7 @@ size_t change_symbol(char* str, size_t str_len, char symbol_old, char symbol_new
     return n_symbol_new;
 }
 
-size_t change_symbol_calc_str(const char* str, size_t str_len, char symbol_old, char symbol_new, size_t normal_lenght)
+size_t change_symbol_calc_str(char* str, size_t str_len, char symbol_old, char symbol_new, size_t normal_lenght)
 {
     size_t n_str = 0;
     char* last_str = str;
@@ -304,9 +304,9 @@ char** create_text5(FILE *stream)
 
     //работа с буфером
 
-    size_t n_str = change_symbol(buf, file_size, '\n', '\0');//фактически возвращает нам число /n в тексте
+    size_t normal_lenght = 20;
 
-    
+    size_t n_str = change_symbol_calc_str(buf, file_size, '\n', '\0', 20);//фактически возвращает нам число /n в тексте
 
     char** text5 = (char**) calloc(n_str+1, sizeof(char*));
 
@@ -319,7 +319,10 @@ char** create_text5(FILE *stream)
             buf_iter ++;
         }
 
-        *(text5 + str_iter) = strdup_(buf_iter);
+        if(strlen_ > normal_lenght)
+        {
+            *(text5 + str_iter) = strdup_(buf_iter);
+        }
 
         while(*(buf_iter) != '\0')
         {
@@ -366,7 +369,7 @@ void Print_Text(char** text)
 
 //----------------------------Sort--string-----------------------------------------------------------------
 
-int is_letter(char c)
+int is_letter(char c)//trubles with Russian language
 {
     if((c > 'а' && c < 'я') || (c > 'А' && c < 'Я'))// русские буквы!!
     {
@@ -404,3 +407,32 @@ int str_cmp(const char* str1, const char* str2)//return >0 if str1>str2 return 0
     return (*iter_str1 - *iter_str2);
 }
 
+void swap_str(char** data, size_t iter_str1, size_t iter_str2)
+{
+    char* iter_str = *(data + iter_str1);
+
+    *(data + iter_str1) = *(data + iter_str2);
+    *(data + iter_str2) = iter_str;
+}
+
+char** bubble_sort(char** data, size_t size)
+{
+    for(size_t n_pass = 0; n_pass < size - 1; n_pass ++)
+    {
+        size_t n_swops = 0;
+
+        for(size_t i = 0; i < size - n_swops - 1; i++)
+        {
+            if(cmp(*(data + i), *(data + i + 1)) > 0)
+            {
+                swap_str(data, i, i+1);
+                n_swops ++;
+            }
+        }
+        if(n_swops == 0)
+        {
+            break;
+        }
+    }
+    return data;
+}
