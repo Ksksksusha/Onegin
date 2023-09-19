@@ -268,6 +268,28 @@ size_t change_symbol(char* str, size_t str_len, char symbol_old, char symbol_new
     return n_symbol_new;
 }
 
+size_t change_symbol_calc_str(const char* str, size_t str_len, char symbol_old, char symbol_new, size_t normal_lenght)
+{
+    size_t n_str = 0;
+    char* last_str = str;
+
+    for(size_t str_iter = 0; str_iter < str_len; str_iter++)
+    {
+        if(*(str + str_iter) == symbol_old)
+        {
+            *(str + str_iter) = symbol_new;
+        }
+        if(*(str + str_iter) == symbol_new && (str_iter - last_str) > normal_lenght)
+        {
+            n_str ++;
+        }
+    }
+
+    return n_str;
+}
+
+
+
 char** create_text5(FILE *stream)
 {
     //работа с самим файлом
@@ -282,13 +304,15 @@ char** create_text5(FILE *stream)
 
     //работа с буфером
 
-    size_t n_str = change_symbol(buf, file_size, '\n', '\0');
+    size_t n_str = change_symbol(buf, file_size, '\n', '\0');//фактически возвращает нам число /n в тексте
+
+    
 
     char** text5 = (char**) calloc(n_str+1, sizeof(char*));
 
     char* buf_iter = buf;
 
-    for(int str_iter = 0; str_iter < n_str; str_iter++)
+    for(int str_iter = 0; str_iter < n_str; str_iter++)//не копировать все строки, пропускать пустые и названия глав!!!
     {
         while(*(buf_iter) == '\0')
         {
@@ -310,7 +334,7 @@ char** create_text5(FILE *stream)
     return text5;
 }
 
-size_t text5_size(char** data)
+size_t text_size(char** data)
 {
     size_t data_size = 0;
     char** data_iter = data;
@@ -325,7 +349,7 @@ size_t text5_size(char** data)
 
 void clear_data(char** data)
 {
-    size_t data_size = text5_size(data);
+    size_t data_size = text_size(data);
 
     for(size_t data_iter=0; data_iter < data_size; data_iter ++)
     {
@@ -335,14 +359,48 @@ void clear_data(char** data)
     free(data);
 }
 
-
+void Print_Text(char** text)
+{
+    d
+}
 
 //----------------------------Sort--string-----------------------------------------------------------------
 
-void bubble_sort(char** data, int size)
+int is_letter(char c)
 {
-    for(int n_pass = 0; n_pass < size-1; n_pass++)
+    if((c > 'а' && c < 'я') || (c > 'А' && c < 'Я'))// русские буквы!!
     {
-        size_t n_swops = 0;
+        return 1;//true
     }
+    return 0;
 }
+
+int str_cmp(const char* str1, const char* str2)//return >0 if str1>str2 return 0 if str1=str2
+{
+    char* iter_str1 = str1;
+    char* iter_str2 = str2;
+
+    while(!is_letter(*iter_str1))
+    {
+        iter_str1++;
+    }
+    while(!is_letter(*iter_str2))
+    {
+        iter_str2++;
+    } 
+
+    while(*iter_str1 != '\0' && *iter_str2 != '\0' && *iter_str1 == *iter_str2)
+    {
+        while(!is_letter(*iter_str1))
+        {
+            iter_str1++;
+        }
+        while(!is_letter(*iter_str2))
+        {
+            iter_str2++;
+        }
+    }
+
+    return (*iter_str1 - *iter_str2);
+}
+
